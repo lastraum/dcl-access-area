@@ -31,3 +31,4 @@ export default {
     PROD && terser({ format: { comments: false } }),
   ],
 };
+

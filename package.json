@@ -32,7 +32,10 @@
     "@rollup/plugin-typescript": "^8.3.1",
     "decentraland-ecs": "latest",
     "rollup": "^2.70.1",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "@dcl/crypto-scene-utils": "^1.1.1",
+    "@dcl/ecs-scene-utils": "^1.7.5",
+    "eth-connect": "^6.0.2"
   },
   "dependencies": {
     "@dcl/crypto-scene-utils": "^1.1.1",
