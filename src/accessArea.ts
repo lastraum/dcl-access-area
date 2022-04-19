@@ -5,7 +5,7 @@ import * as abi from './abi'
 import { getUserData } from "@decentraland/Identity"
 import * as crypto from '@dcl/crypto-scene-utils'
 
-type Config = {
+export type Config = {
     name?: string,
     contract?:string,
     chain?:ChainType,

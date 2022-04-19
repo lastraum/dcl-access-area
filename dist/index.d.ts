@@ -1,1 +1,1 @@
-export { createAccessArea } from './accessArea';
+export { createArea } from './accessArea';

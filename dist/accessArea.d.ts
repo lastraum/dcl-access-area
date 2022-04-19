@@ -29,7 +29,7 @@ export declare enum NFTType {
     ERC721 = 0,
     ERC1155 = 1
 }
-export declare function createAccessArea(data: Config): Promise<AccessArea>;
+export declare function createArea(data: Config): Promise<AccessArea>;
 declare class AccessArea extends Entity {
     constructor(data: Config);
 }
