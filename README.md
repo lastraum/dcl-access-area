@@ -1,18 +1,18 @@
-## SDK Library
 
-This project has the basics to start building your own library for using in Decentraland scenes.
+# dcl-access-area
 
-The libraries in the [Awesome Repository](https://github.com/decentraland-scenes/Awesome-Repository#Libraries) are available for all to use. We encourage you to create and share your own as well, we'd love to see the community grow and start sharing more reusable solutions to common problems through libraries!
+This libary makes it easier to create 'restricted' areas within your scene based on different parameters. Some of these parameters are:
+- NFT Ownership
+   - ETH or Polygon
+   - ERC 721
+   - ERC 1155
+- Wearables
+   - Is a user wearing certain wearables
+   - Does a user own certain wearables
+   - Filter by 'has all'
+   - Filter by 'has any' 
 
-## Publish
 
-See [Create Libraries]() for tips on how to design and develop your library, and for simple instructions for publishing it to NPM.
-
-Below is a template to help you craft documentation for your library, so others know how to use it.
-
-# MyAmazingLibrary Documentation
-
-myAmazingLibrary includes helpful solutions for `< insert use case >` in a Decentraland scene.
 
 ## Install
 
@@ -21,54 +21,107 @@ To use any of the helpers provided by this library:
 1. Install it as an npm package. Run this command in your scene's project folder:
 
    ```
-   npm install myAmazingLibrary
+   npm install dcl-access-area
    ```
 
 2. Add this line at the start of your game.ts file, or any other TypeScript files that require it:
 
    ```ts
-   import * as magic from 'myAmazingLibrary'
+   import * as access from 'dcl-access-area'
    ```
 
 ## Usage
 
-### < use case 1 >
+### Configuration
 
-To do `< insert use case >`, add the `MyAmazingComponent` component to the entity.
+The access area takes in a Config object with the following parameters depending on your access requirements:
 
-MyAmazingComponent requires two arguments when being constructed:
+- `name`: (optional) parameter to give a name to your entity
+- `contract`: (optional) for the nft contract address
+- `tokenId`: (optional) for the nft token id
+- `chain'`: (optional) to choose between ETH and Polygon chains
+- `nftType`: (optional) to choose between `ERC721` and `ERC1155` nft token standards
+- `wearables`: (optional) array of wearable contract addresses and their item id eg. `["0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"]`
+- `wearablesMatch`: (optional) to filter based on if the user has `ANY` or `ALL` of the wearables given in the array
+- `type`: Type of access area. Options are:
+   - `NFT`
+   - `HASWEARABLES`
+   - `WEARABLESON`
+- `transform`: pass in the `TransformConstructorArgs` to position, rotate, and scale the access area
+- `debug`: a `boolean` value to toggle showing / hiding the access area locally when testing
+   - **DO NOT FORGET TO SET TO FALSE BEFORE DEPLOYING**
 
-- `start`: Vector3 for the start position
-- `duration`: duration (in seconds)
+### Check NFT Ownership on ETH (721)
 
-MyAmazingComponent can optionally also take the following argument:
-
-- `color`: Color4 value for the color. If not provided, the default value is `Color4.Red()`
-
-This example uses MyAmazingComponent to do `< insert use case >` to an entity over a period of 2 seconds:
+Create an access area and check if users **own at least 1** nft from the contract address.
 
 ```ts
-import * as magic from 'myAmazingLibrary'
+import * as access from 'dcl-access-area'
 
-// Create entity
-const box = new Entity()
-
-// Give entity a shape and transform
-box.addComponent(new BoxShape())
-box.addComponent(new Transform())
-
-// Move entity
-box.addComponent(new magic.MyAmazingComponent(new Vector3(1, 1, 1), 2))
-
-// Add entity to engine
-engine.addEntity(box)
+let wall = access.createArea({
+    debug: true,
+    name: "wall1",
+    type: access.Type.NFT,
+    nftType: access.NFTType.ERC721,
+    chain: access.ChainType.ETH,
+    contract: "0xf23e1aa97de9ca4fb76d2fa3fafcf4414b2afed0",
+    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)}
+})
 ```
 
-> Note: Be aware that if < other use case >, MyAmazingComponent will < do some other thing >.
+### Check NFT Ownership on ETH (1155)
 
-### < use case 2 >
+Create an access area and check if users **own at least 1** nft from the contract address.
 
-...
+```ts
+import * as access from 'dcl-access-area'
+
+let wall = access.createArea({
+    debug: true,
+    name: "wall1",
+    type: access.Type.NFT,
+    nftType: access.NFTType.ERC1155,
+    chain: access.ChainType.ETH,
+    contract: "0x10daa9f4c0f985430fde4959adb2c791ef2ccf83",
+    tokenId: "1",
+    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)}
+})
+```
+
+### Check User Wearing Wearables
+
+Create an access area and check if users are currently wearing the wearables. Use the `wearablesMatch` option to create a filter based on the user wearing `ALL` or `ANY`
+
+```ts
+import * as access from 'dcl-access-area'
+
+let wall = access.createArea({
+    debug: true,
+    name: "wall1",
+    type: access.Type.WEARABLESON,
+    wearables:["0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
+    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)}
+})
+```
+
+
+### Check User Owns Wearables
+
+Create an access area and check if users are currently owns the wearables. Use the `wearablesMatch` option to create a filter based on the user owning `ALL` or `ANY`
+
+```ts
+import * as access from 'dcl-access-area'
+
+let wall = access.createArea({
+    debug: true,
+    name: "wall1",
+    type: access.Type.HASWEARABLES,
+    wearables:["0xf87a8372437c40ef9176c1b224cbe9307a617a25:0", "0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
+    wearablesMatch: access.Match.ALL,
+    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)}
+})
+```
+
 
 ## Copyright info
 
