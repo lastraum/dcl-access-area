@@ -13,7 +13,7 @@ export type Config = {
     type:Type,
     debug:boolean,
     tokenId?:string,
-    transform: TranformConstructorArgs,
+    transform: TransformConstructorArgs,
     wearables?:string[],
     wearablesMatch?:Match
 }
