@@ -1,6 +1,6 @@
 {
   "name": "dcl-access-area",
-  "version": "1.0.0",
+  "version": "1.1.4",
   "description": "This is a restricted access area based on nft ownership or wearable ownership",
   "main": "./dist/index.js",
   "scripts": {
@@ -27,19 +27,19 @@
     "dist"
   ],
   "devDependencies": {
+    "@dcl/crypto-scene-utils": "^1.1.1",
+    "@dcl/ecs-scene-utils": "^1.7.5",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-node-resolve": "^13.1.3",
     "@rollup/plugin-typescript": "^8.3.1",
     "decentraland-ecs": "latest",
+    "eth-connect": "^6.0.2",
     "rollup": "^2.70.1",
-    "rollup-plugin-terser": "^7.0.2",
-    "@dcl/crypto-scene-utils": "^1.1.1",
-    "@dcl/ecs-scene-utils": "^1.7.5",
-    "eth-connect": "^6.0.2"
+    "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
     "@dcl/crypto-scene-utils": "^1.1.1",
-    "@dcl/ecs-scene-utils": "^1.7.5",
+    "@dcl/ui-scene-utils": "^1.8.3",
     "eth-connect": "^6.0.2"
   },
   "engines": {

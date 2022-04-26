@@ -4,6 +4,8 @@ import { getProvider } from "@decentraland/web3-provider"
 import * as abi from './abi'
 import { getUserData } from "@decentraland/Identity"
 import * as crypto from '@dcl/crypto-scene-utils'
+import * as utils from '@dcl/ecs-scene-utils'
+import * as ui from '@dcl/ui-scene-utils'
 
 export type Config = {
     name?: string,
@@ -15,13 +17,16 @@ export type Config = {
     tokenId?:string,
     transform: TransformConstructorArgs,
     wearables?:string[],
-    wearablesMatch?:Match
+    wearablesMatch?:Match,
+    deniedMessage?:string,
+    onDenied?:() => void
 }
 
 export enum Type {
     NFT,
     HASWEARABLES,
-    WEARABLESON
+    WEARABLESON,
+    ADDRESS
 }
 
 export enum Match {
@@ -53,25 +58,32 @@ export enum NFTType {
  * @param {Match} wearablesMatch (optional) - if the user has "ANY" or "ALL" of the wearables
  * @return {Area} Entity which can be used later
  */
-export async function createArea(data:Config){
+export function createArea(data:Config){
 
-    let ent = new AccessArea(data)
+    let ent:AccessArea = new AccessArea(data)
     engine.addEntity(ent)
 
-    if(data.type == Type.NFT){
-        log('checking nft')
-        if((data.chain  == ChainType.ETH ? await checkL1(data) : await checkL2(data))){
-            engine.removeEntity(ent)
-        }   
-    }
-    else{
-        log('checking wearables')
-        if(await checkWearables(data)){
-            engine.removeEntity(ent)
+    executeTask(async()=>{
+        try{
+            if(data.type == Type.NFT){
+                log('checking nft')
+                if((data.chain  == ChainType.ETH ? await checkL1(data) : await checkL2(data))){
+                    log("we have nft holder")
+                    engine.removeEntity(ent)
+                }   
+            }
+            else{
+                log('checking wearables')
+                if(await checkWearables(data)){
+                    engine.removeEntity(ent)
+                }
+            }
         }
-    }
+        catch(e){
+    
+        }
+    })
     return ent
-
 }
 
 let transparentMaterial = new BasicMaterial()
@@ -83,8 +95,12 @@ debugMaterial.albedoColor = new Color4(0.2,.1, .9, .3)
 
 class AccessArea extends Entity{
 
+    data:Config
+
     constructor(data:Config){
         super(data.name)
+        this.data = data
+
         this.addComponent(new BoxShape())
         this.addComponent(new Transform(data.transform))
         if(data.debug){
@@ -94,6 +110,29 @@ class AccessArea extends Entity{
         else{
             this.addComponent(transparentMaterial)
         }
+
+        let t = this.getComponent(Transform).scale.clone()
+        this.addComponent(new utils.TriggerComponent(new utils.TriggerBoxShape(new Vector3(t.x + .7, t.y + .7, t.z + .7), new Vector3(0,0,0)),
+        {
+            enableDebug: data.debug,
+            onCameraEnter:()=>{
+                if(data.deniedMessage){
+                    ui.displayAnnouncement(data.deniedMessage)
+                }
+
+                if(data.onDenied){
+                    data.onDenied()
+                }
+            }
+        }))
+    }
+
+    updateDeniedAction(action:()=>void){
+        this.data.onDenied = action
+    }
+
+    updateDeniedMessage(message:string){
+        this.data.deniedMessage = message
     }
 }
 
@@ -227,6 +266,7 @@ async function checkL2(data:Config){
 }
 
 async function checkL1(data:Config){
+    log(data)
     try {
         const address = await EthereumController.getUserAccount()
         const provider = await getProvider()
@@ -247,7 +287,7 @@ async function checkL1(data:Config){
             }
             else{
                 value = await contract.balanceOf(address, data.tokenId)
-                log('L2 balance of is', value)
+                log('L1 balance of is', value)
                 if(value > 0){
                     return true
                 }
@@ -259,7 +299,7 @@ async function checkL1(data:Config){
         }
         else{
             value = await contract.balanceOf(address)
-            log('L2 balance of is', value)
+            log('L1 balance of is', value)
             if(value > 0){
                 return true
             }
