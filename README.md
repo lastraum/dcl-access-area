@@ -1,36 +1,46 @@
 
 # dcl-access-area
 
-This libary makes it easier to create 'restricted' areas within your scene based on different parameters. Some of these parameters are:
+This libary makes it easy to create 'restricted' areas within your scene based on different parameters. Some of these parameters are:
+
 - NFT Ownership
    - ETH or Polygon
    - ERC 721
    - ERC 1155
+
 - Wearables
+
    - Is a user wearing certain wearables
    - Does a user own certain wearables
    - Filter by 'has all'
    - Filter by 'has any' 
 
 
-
 ## Install
 
 To use any of the helpers provided by this library:
 
-1. Install it as an npm package. Run this command in your scene's project folder:
+1. Install this library as an npm package. Run this command in your scene's project folder:
 
    ```
    npm install dcl-access-area
    ```
 
-2. Add this line at the start of your game.ts file, or any other TypeScript files that require it:
+2. Install the following dependency libraries, if not already in your project:
+
+   ```
+   npm install @dcl/crypto-scene-utils @dcl/ecs-scene-utils eth-connect -B
+   ```
+
+3. Add this line at the start of your game.ts file, or any other TypeScript files that require it:
 
    ```ts
    import * as access from 'dcl-access-area'
    ```
 
 ## Usage
+
+Create an access area to block any players that don't meet the criteria from being able to enter an area
 
 ### Configuration
 
