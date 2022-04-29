@@ -62,8 +62,10 @@ When creating a new area, pass in a Config object with the following parameters 
 - `wearables`: (optional) array of wearable contract addresses and their item id eg. `["0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"]`
 - `wearablesMatch`: (optional) to filter based on if the user has `ANY` or `ALL` of the wearables given in the array
 - `name`: (optional) parameter to give a name to your entity
+- `deniedMessage`: (optional) parameter to display a message to the user if they are denied access
+- `onDenied`: (optional) callback function when a user is denied access
 
-   - **DO NOT FORGET TO SET TO FALSE BEFORE DEPLOYING**
+   - **DO NOT FORGET TO SET TO DEBUG TO FALSE BEFORE DEPLOYING**
 
 ### Check NFT Ownership on ETH (721)
 
