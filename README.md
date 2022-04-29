@@ -75,7 +75,7 @@ Create an access area and check if users **own at least 1** nft from the contrac
 import * as access from 'dcl-access-area'
 
 let wall = access.createArea({
-    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)}
+    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)},
     debug: true,
     type: access.Type.NFT,
     nftType: access.NFTType.ERC721,
@@ -93,7 +93,7 @@ Create an access area and check if users **own at least 1** nft from the contrac
 import * as access from 'dcl-access-area'
 
 let wall = access.createArea({
-    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)}
+    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)},
     debug: true,
     type: access.Type.NFT,
     nftType: access.NFTType.ERC1155,
@@ -112,7 +112,7 @@ Create an access area and check if users are currently wearing the wearables. Us
 import * as access from 'dcl-access-area'
 
 let wall = access.createArea({
-    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)}
+    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)},
     debug: true,
     type: access.Type.WEARABLESON,
     wearables:["0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
