@@ -114,7 +114,7 @@ class AccessArea extends Entity{
         let t = this.getComponent(Transform).scale.clone()
         this.addComponent(new utils.TriggerComponent(new utils.TriggerBoxShape(new Vector3(t.x + .7, t.y + .7, t.z + .7), new Vector3(0,0,0)),
         {
-            enableDebug: data.debug,
+            enableDebug: false,
             onCameraEnter:()=>{
                 if(data.deniedMessage){
                     ui.displayAnnouncement(data.deniedMessage)
