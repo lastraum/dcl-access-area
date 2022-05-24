@@ -15,6 +15,8 @@ This libary makes it easy to create 'restricted' areas within your scene based o
    - Filter by 'has all'
    - Filter by 'has any' 
 
+- Address Whitelist
+
 
 ## Install
 
@@ -58,8 +60,9 @@ When creating a new area, pass in a Config object with the following parameters 
 - `nftType`: (optional) to choose between `ERC721` and `ERC1155` nft token standards
 - `contract`: (optional) for the nft contract address
 - `tokenId`: (optional) for the nft token id
-- `chain'`: (optional) to choose between ETH and Polygon chains
-- `wearables`: (optional) array of wearable contract addresses and their item id eg. `["0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"]`
+- `chain`: (optional) to choose between ETH and Polygon chains
+- `allowedAddresses`: (optional) arry of eth addresses who will have access to the area `["0xf87a8372437c40ef9176c1b224cbe9307a617a25"]`
+- `wearables`: (optional) array of wearable contract addresses and their item id eg. `["urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"]`
 - `wearablesMatch`: (optional) to filter based on if the user has `ANY` or `ALL` of the wearables given in the array
 - `name`: (optional) parameter to give a name to your entity
 - `deniedMessage`: (optional) parameter to display a message to the user if they are denied access
