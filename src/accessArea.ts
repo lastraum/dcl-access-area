@@ -18,6 +18,7 @@ export type Config = {
     transform: TransformConstructorArgs,
     wearables?:string[],
     wearablesMatch?:Match,
+    allowedAddresses?:string[],
     deniedMessage?:string,
     onDenied?:() => void
 }
@@ -65,18 +66,31 @@ export function createArea(data:Config){
 
     executeTask(async()=>{
         try{
-            if(data.type == Type.NFT){
-                log('checking nft')
-                if((data.chain  == ChainType.ETH ? await checkL1(data) : await checkL2(data))){
-                    log("we have nft holder")
-                    engine.removeEntity(ent)
-                }   
-            }
-            else{
-                log('checking wearables')
-                if(await checkWearables(data)){
-                    engine.removeEntity(ent)
-                }
+            switch(data.type){
+                case Type.NFT:
+                    log('checking nft')
+                    if((data.chain  == ChainType.ETH ? await checkL1(data) : await checkL2(data))){
+                        log("we have nft holder")
+                        engine.removeEntity(ent)
+                    }   
+                    break;
+
+                case Type.ADDRESS:
+                    log('checking Addresses')
+                    if(data.allowedAddresses){
+                        if(await checkAddress(data)){
+                            engine.removeEntity(ent)
+                        }
+                    }
+                    break;
+
+                case Type.HASWEARABLES:
+                case Type.WEARABLESON:
+                    log('checking wearables')
+                    if(await checkWearables(data)){
+                        engine.removeEntity(ent)
+                    }
+                    break;
             }
         }
         catch(e){
@@ -133,6 +147,27 @@ class AccessArea extends Entity{
 
     updateDeniedMessage(message:string){
         this.data.deniedMessage = message
+    }
+}
+
+async function checkAddress(data:Config){
+    const userData = await getUserData()
+
+    if(userData?.hasConnectedWeb3){
+        let addresses:string[] = []
+        for(let i = 0; i < data.allowedAddresses!.length; i++){
+            addresses.push(data.allowedAddresses![i].toLowerCase())
+        }
+
+        if(addresses.indexOf(userData.publicKey!.toLowerCase()) != -1){
+            return true
+        }
+        else{
+            return false
+        }
+    }
+    else{
+        return false
     }
 }
 
