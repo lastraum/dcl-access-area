@@ -115,7 +115,7 @@ let wall = access.createArea({
     transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)},
     debug: true,
     type: access.Type.WEARABLESON,
-    wearables:["0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
+    wearables:["urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
     name: "wall1",
 })
 ```
@@ -132,7 +132,7 @@ let wall = access.createArea({
     transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)}
     debug: true,
     type: access.Type.HASWEARABLES,
-    wearables:["0xf87a8372437c40ef9176c1b224cbe9307a617a25:0", "0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
+    wearables:["urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:0", "urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
     wearablesMatch: access.Match.ALL,
     name: "wall1",
 })
