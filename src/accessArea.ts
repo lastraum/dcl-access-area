@@ -6,6 +6,7 @@ import { getUserData } from "@decentraland/Identity"
 import * as crypto from '@dcl/crypto-scene-utils'
 import * as utils from '@dcl/ecs-scene-utils'
 import * as ui from '@dcl/ui-scene-utils'
+import { isPreviewMode } from "@decentraland/EnvironmentAPI"
 
 export type Config = {
     name?: string,
@@ -117,13 +118,16 @@ class AccessArea extends Entity{
 
         this.addComponent(new BoxShape())
         this.addComponent(new Transform(data.transform))
-        if(data.debug){
-            this.addComponent(debugMaterial)
-            this.getComponent(BoxShape).withCollisions = false
-        }
-        else{
-            this.addComponent(transparentMaterial)
-        }
+
+        executeTask(async()=>{
+            if(data.debug && await isPreviewMode()){
+                this.addComponent(debugMaterial)
+                this.getComponent(BoxShape).withCollisions = false
+            }
+            else{
+                this.addComponent(transparentMaterial)
+            }
+        })
 
         let t = this.getComponent(Transform).scale.clone()
         this.addComponent(new utils.TriggerComponent(new utils.TriggerBoxShape(new Vector3(t.x + .7, t.y + .7, t.z + .7), new Vector3(0,0,0)),
