@@ -85,6 +85,7 @@ let wall = access.createArea({
     chain: access.ChainType.ETH,
     contract: "0xf23e1aa97de9ca4fb76d2fa3fafcf4414b2afed0",
     name: "wall1",
+    deniedMessage: "You don't own the required token"
 })
 ```
 
@@ -104,6 +105,7 @@ let wall = access.createArea({
     contract: "0x10daa9f4c0f985430fde4959adb2c791ef2ccf83",
     tokenId: "1",
     name: "wall1",
+    deniedMessage: "You don't own the required token"
 })
 ```
 
@@ -120,6 +122,7 @@ let wall = access.createArea({
     type: access.Type.WEARABLESON,
     wearables:["urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
     name: "wall1",
+    deniedMessage: "You don't match the dress code"
 })
 ```
 
@@ -138,6 +141,7 @@ let wall = access.createArea({
     wearables:["urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:0", "urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
     wearablesMatch: access.Match.ALL,
     name: "wall1",
+    deniedMessage: "You don't own the required wearables"
 })
 ```
 
@@ -152,6 +156,7 @@ let wall = access.createArea({
     type: access.Type.ADDRESS,
 	allowedAddresses: ["123456789"],
     name: "wall1"
+    deniedMessage: "You're not in the guest list"
 })
 ```
 
