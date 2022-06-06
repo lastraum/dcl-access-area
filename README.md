@@ -31,7 +31,7 @@ To use any of the helpers provided by this library:
 2. Install the following dependency libraries, if not already in your project:
 
    ```
-   npm install @dcl/crypto-scene-utils @dcl/ecs-scene-utils eth-connect -B
+   npm install @dcl/crypto-scene-utils @dcl/ecs-scene-utils eth-connect -B @dcl/ui-scene-utils
    ```
 
 3. Add this line at the start of your game.ts file, or any other TypeScript files that require it:
