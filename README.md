@@ -31,7 +31,7 @@ To use any of the helpers provided by this library:
 2. Install the following dependency libraries, if not already in your project:
 
    ```
-   npm install @dcl/crypto-scene-utils @dcl/ecs-scene-utils eth-connect -B @dcl/ui-scene-utils
+   npm install @dcl/crypto-scene-utils @dcl/ecs-scene-utils eth-connect @dcl/ui-scene-utils -B
    ```
 
 3. Add this line at the start of your game.ts file, or any other TypeScript files that require it:
@@ -85,6 +85,7 @@ let wall = access.createArea({
     chain: access.ChainType.ETH,
     contract: "0xf23e1aa97de9ca4fb76d2fa3fafcf4414b2afed0",
     name: "wall1",
+    deniedMessage: "You don't own the required token"
 })
 ```
 
@@ -104,6 +105,7 @@ let wall = access.createArea({
     contract: "0x10daa9f4c0f985430fde4959adb2c791ef2ccf83",
     tokenId: "1",
     name: "wall1",
+    deniedMessage: "You don't own the required token"
 })
 ```
 
@@ -120,6 +122,7 @@ let wall = access.createArea({
     type: access.Type.WEARABLESON,
     wearables:["urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
     name: "wall1",
+    deniedMessage: "You don't match the dress code"
 })
 ```
 
@@ -132,12 +135,28 @@ Create an access area and check if users are currently owns the wearables. Use t
 import * as access from 'dcl-access-area'
 
 let wall = access.createArea({
-    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)}
+    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)},
     debug: true,
     type: access.Type.HASWEARABLES,
     wearables:["urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:0", "urn:decentraland:matic:collections-v2:0xf87a8372437c40ef9176c1b224cbe9307a617a25:1"],
     wearablesMatch: access.Match.ALL,
     name: "wall1",
+    deniedMessage: "You don't own the required wearables"
+})
+```
+
+### Check Player Address
+
+Create an access area and check if the player's eth address belongs to a hardcoded allow-list. Use the `allowedAddresses` option to create a filter based on the user's address.
+
+```ts
+let wall = access.createArea({
+    transform: {position: new Vector3(8,1,8), scale: new Vector3(4,4,4)},
+    debug: false,
+    type: access.Type.ADDRESS,
+	allowedAddresses: ["123456789"],
+    name: "wall1"
+    deniedMessage: "You're not in the guest list"
 })
 ```
 
