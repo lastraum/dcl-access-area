@@ -57,6 +57,7 @@ When creating a new area, pass in a Config object with the following parameters 
    - `NFT`
    - `HASWEARABLES`
    - `WEARABLESON`
+- `wallType`: pass in the `WallType` as either a Box or Cylinder shape
 - `nftType`: (optional) to choose between `ERC721` and `ERC1155` nft token standards
 - `contract`: (optional) for the nft contract address
 - `tokenId`: (optional) for the nft token id
