@@ -6,7 +6,7 @@ import { getUserData } from "@decentraland/Identity"
 import * as crypto from '@dcl/crypto-scene-utils'
 import * as utils from '@dcl/ecs-scene-utils'
 import * as ui from '@dcl/ui-scene-utils'
-import { isPreviewMode } from "@decentraland/EnvironmentAPI"
+import { getCurrentRealm, isPreviewMode } from "@decentraland/EnvironmentAPI"
 
 export type Config = {
     name?: string,
@@ -136,7 +136,15 @@ class AccessArea extends Entity{
         executeTask(async()=>{
             if(data.debug && await isPreviewMode()){
                 this.addComponent(debugMaterial)
-                this.getComponent(BoxShape).withCollisions = false
+                switch(this.data.wallType){
+                    case WallType.BOX:
+                        this.getComponent(BoxShape).withCollisions = false                        
+                        break;
+        
+                    case WallType.CYLINDER:
+                        this.getComponent(CylinderShape).withCollisions = false
+                        break;
+                }
             }
             else{
                 this.addComponent(transparentMaterial)
@@ -194,35 +202,54 @@ async function checkWearables(data:Config){
     const userData = await getUserData()
 
     if(userData?.hasConnectedWeb3){
+        log('we are here')
 
         if(data.type == Type.HASWEARABLES){
-            let inventory = await crypto.avatar.getUserInventory(userData.publicKey ? userData.publicKey : "")
+            log('getting inventory')
+
+            try {
+                let player = await getUserData()
+                const playerRealm = await getCurrentRealm()
+
+                let url = `https://peer.decentral.io/lambdas/collections/wearables-by-owner/${userData.userId}`.toString()
+                log("using URL: ", url)
             
-            if(data.wearablesMatch == Match.ANY){
-                for(let i = 0; i < filters.length; i++){
-                    for (const wearable of inventory) {
-                        if (wearable === filters[i]) {
-                            return true
-                        }
-                      }
-                }
-            }
-            else{
-                let count = 0
-                for(let i = 0; i < filters.length; i++){
-                    for (const wearable of inventory) {
-                        if (wearable === filters[i]) {
-                            count++
-                        }
-                      }
-                }
-                if(count >= filters.length){
-                    return true
+            
+                let response = await fetch(url)
+                let json = await response.json()
+                let inventory = json
+
+                if(data.wearablesMatch == Match.ANY){
+                    log('matching any')
+                    for(let i = 0; i < filters.length; i++){
+                        for (const wearable of inventory) {
+                            if (wearable.urn === filters[i]) {
+                                return true
+                            }
+                          }
+                    }
                 }
                 else{
-                    return false
-                }   
-            }
+                    let count = 0
+                    for(let i = 0; i < filters.length; i++){
+                        for (const wearable of inventory) {
+                            if (wearable.urn === filters[i]) {
+                                count++
+                            }
+                          }
+                    }
+                    if(count >= filters.length){
+                        return true
+                    }
+                    else{
+                        return false
+                    }   
+                }
+            
+              } catch {
+                log("an error occurred while reaching for wearables data")
+                return false
+              }
         }
 
         else{
@@ -264,18 +291,17 @@ async function checkWearables(data:Config){
 async function checkL2(data:Config){
     try{
         log('checking L2 nft')
-        const provider = await getProvider();
-        const requestManager: any = new EthConnect.RequestManager(provider);
-        const metaProvider: any = new EthConnect.WebSocketProvider("wss://rpc-mainnet.matic.quiknode.pro");
+
+        const provider = await getProvider()
+        const requestManager: any = new EthConnect.RequestManager(provider)
+        const metaProvider: any = new EthConnect.HTTPProvider('https://polygon-rpc.com')
         const address = await EthereumController.getUserAccount()
-        const metaRequestManager: any = new EthConnect.RequestManager(metaProvider);
+        const metaRequestManager: any = new EthConnect.RequestManager(metaProvider)
         const providers = {
-          provider,
-          requestManager,
-          metaProvider,
-          metaRequestManager,
-          address,
-        };
+        requestManager,
+        metaProvider,
+        metaRequestManager
+            }
 
         let contract: any = await new EthConnect.ContractFactory(metaRequestManager,data.nftType == NFTType.ERC721 ? abi.abi721 : abi.abi1155 ).at(data.contract ? data.contract : "");
         let value:any
@@ -308,7 +334,7 @@ async function checkL2(data:Config){
                 return true
             }
             else{
-                return false
+                return false    
             }
         }
     }
@@ -319,6 +345,7 @@ async function checkL2(data:Config){
 }
 
 async function checkL1(data:Config){
+    log('checking L1 ownership')
     log(data)
     try {
         const address = await EthereumController.getUserAccount()
