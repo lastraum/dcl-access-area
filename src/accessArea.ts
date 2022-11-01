@@ -17,11 +17,17 @@ export type Config = {
     debug:boolean,
     tokenId?:string,
     transform: TransformConstructorArgs,
+    wallType: WallType,
     wearables?:string[],
     wearablesMatch?:Match,
     allowedAddresses?:string[],
     deniedMessage?:string,
     onDenied?:() => void
+}
+
+export enum WallType {
+    BOX,
+    CYLINDER
 }
 
 export enum Type {
@@ -116,7 +122,15 @@ class AccessArea extends Entity{
         super(data.name)
         this.data = data
 
-        this.addComponent(new BoxShape())
+        switch(this.data.wallType){
+            case WallType.BOX:
+                this.addComponent(new BoxShape())
+                break;
+
+            case WallType.CYLINDER:
+                this.addComponent(new CylinderShape())
+                break;
+        }
         this.addComponent(new Transform(data.transform))
 
         executeTask(async()=>{
