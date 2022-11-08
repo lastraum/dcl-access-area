@@ -66,12 +66,11 @@ export enum NFTType {
  * @param {Match} wearablesMatch (optional) - if the user has "ANY" or "ALL" of the wearables
  * @return {Area} Entity which can be used later
  */
-export function createArea(data:Config){
+export async function createArea(data:Config){
 
     let ent:AccessArea = new AccessArea(data)
     engine.addEntity(ent)
 
-    executeTask(async()=>{
         try{
             switch(data.type){
                 case Type.NFT:
@@ -79,6 +78,7 @@ export function createArea(data:Config){
                     if((data.chain  == ChainType.ETH ? await checkL1(data) : await checkL2(data))){
                         log("we have nft holder")
                         engine.removeEntity(ent)
+                        ent.hasAccess = true
                     }   
                     break;
 
@@ -87,6 +87,7 @@ export function createArea(data:Config){
                     if(data.allowedAddresses){
                         if(await checkAddress(data)){
                             engine.removeEntity(ent)
+                            ent.hasAccess = true
                         }
                     }
                     break;
@@ -96,6 +97,7 @@ export function createArea(data:Config){
                     log('checking wearables')
                     if(await checkWearables(data)){
                         engine.removeEntity(ent)
+                        ent.hasAccess = true
                     }
                     break;
             }
@@ -103,7 +105,6 @@ export function createArea(data:Config){
         catch(e){
     
         }
-    })
     return ent
 }
 
@@ -117,6 +118,7 @@ debugMaterial.albedoColor = new Color4(0.2,.1, .9, .3)
 class AccessArea extends Entity{
 
     data:Config
+    hasAccess = false
 
     constructor(data:Config){
         super(data.name)
